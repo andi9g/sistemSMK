@@ -14,43 +14,47 @@ use Hash;
 class scanC extends Controller
 {
 
-    public function adminscan($uid, Request $request)
+    public function adminscan(Request $request)
     {
-        $uid = str_replace(" ","",$uid);
-        $ex = explode("___", $uid);
-        $UID = $ex[0];
-        $key_post = $ex[1];
-        $computerId = $ex[2];
-        $ruangan = $ex[3];
+        $UID = $request->uid;
+        $key_post = $request->key_post;
+        $computerId = $request->computerId;
+        $perangkat = $request->perangkat;
 
-        $cek = adminM::where('computerId', $computerId)->where('key_post', $key_post)->count();
-       
-        if($cek === 1) {
-            $Write= "<?php
-                        session_start();
-                        if($"."_SESSION['perangkat'] === '$ruangan' && $"."_SESSION['computerId']==='$computerId'){
-                                $"."UIDresult= '$UID';
-                                echo $"."UIDresult; 
-                            }
-                        ?>
-                    ";
-            $url = public_path().'/masterUID/'.$ruangan.'.php';
-            file_put_contents($url,$Write);
-            echo "berhasil";
-        }else{
-            echo "gagal";
+        try{
+            $cek = adminM::where('computerId', $computerId)->where('key_post', $key_post)->count();
+            
+            if($cek === 1) {
+                $Write= "<?php
+                            session_start();
+                            if($"."_SESSION['perangkat'] === '$perangkat' && $"."_SESSION['computerId']==='$computerId'){
+                                    $"."UIDresult= '$UID';
+                                    echo $"."UIDresult; 
+                                }
+                            ?>
+                        ";
+                $url = public_path().'/masterUID/'.$perangkat.'.php';
+                file_put_contents($url,$Write);
+                echo "hijau";
+            }else{
+                echo "merah";
+            }
+        
+        }catch(\Throwable $th){
+            echo $th;
         }
     }
 
-    public function scan($uid, Request $request) 
+    public function scan(Request $request) 
     {
-        $uid = str_replace(" ","",$uid);
-        $ex = explode("___", $uid);
-        $UID = $ex[0];
-        $key_post = $ex[1];
-        $computerId = $ex[2];
-        $perangkat = $ex[3];
+        // $uid = str_replace(" ","",$uid);
+        // $ex = explode("___", $uid);
+        $UID = $request->uid;
+        $key_post = $request->key_post;
+        $computerId = $request->computerId;
+        $perangkat = $request->perangkat;
 
+        // echo $perangkat;
         $cek = alatM::where('computerId', $computerId)
         ->where('key_post', $key_post)
         ->where('perangkat', $perangkat)
@@ -74,7 +78,16 @@ class scanC extends Controller
                 if($open->open == true) {
                     $cek = absenM::where('nis', $nis)->where('tanggal', $tanggal)->count();
                     if($cek == 1) {
-                        $lanjut = "kuning";
+                        $data = absenM::where('nis', $nis)->where('tanggal', $tanggal)->first();
+                        $keterangan = $data->ket;
+                        if($keterangan == 'I'){
+                            $data = absenM::where('nis', $nis)->where('tanggal', $tanggal)->update([
+                                'ket' => 'H',
+                            ]);
+                            $lanjut = "hijau";
+                        }else {
+                            $lanjut = "kuning";
+                        }
                     }else if($cek == 0) {
                         $absen = new absenM;
                         $absen->nis = $nis;

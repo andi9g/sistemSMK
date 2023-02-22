@@ -9,6 +9,11 @@ use App\Models\superadmin;
 
 class aksesC extends Controller
 {
+    public function csrf(Request $request)
+    {
+        echo csrf_token();
+    }
+
     public function login()
     {
         return view('pages.pagesLogin');
@@ -95,7 +100,7 @@ class aksesC extends Controller
                         $_SESSION['perangkat'] = $data->perangkat;
                         $_SESSION['computerId'] = $data->computerId;
                         
-                        return redirect('welcome')->with('success', 'welcome');
+                        return redirect('absen')->with('success', 'welcome');
                     }else {
                         return redirect('login')->with('toast_error', 'username atau password tidak benar');
                     }
@@ -116,7 +121,7 @@ class aksesC extends Controller
                         $request->session()->put('nama', $data->nama);
                         $request->session()->put('id', $data->id);
 
-                        return redirect('welcome')->with('success', 'welcome');
+                        return redirect('absen')->with('success', 'welcome');
                     }else {
                         return redirect('login')->with('toast_error', 'username atau password tidak benar');
                     }

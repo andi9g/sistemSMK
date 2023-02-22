@@ -64,6 +64,13 @@ class Ktm extends Migration
             $table->timestamps();
         });
 
+        Schema::create('pengaturan', function (Blueprint $table) {
+            $table->bigIncrements('idpengaturan');
+            $table->Integer('keterlambatan');
+            $table->time('jammasuk');
+            $table->timestamps();
+        });
+
         DB::table('open')->insert([
             'open' => true,
         ]);

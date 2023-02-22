@@ -11,10 +11,34 @@
 @endsection
 
 @section('judul')
-    <i class="fa fa-user"></i>Absensi Siswa
+    <i class="fa fa-user"></i> Absensi Siswa
+    
 @endsection
 
 @section('content')
+<div class="row" style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
+    <div class="col-md-6">
+        <a href="{{ url('/absen', []) }}" class="btn btn-secondary">
+            <i class="fa fa-refresh"></i> Refresh
+        </a>
+    </div>
+    <div class="col-md-6 text-right d-inline pb-2">
+        <h4 class="text-bold d-inline"> @if ($open->open == true)
+            JAM MASUK :
+            @else
+            JAM KELUAR :
+
+        @endif </h4>
+
+        <form action="{{ route('ubah.jam') }}" method="post" class="d-inline">
+            @csrf
+            <button type="submit" class="d-inline btn btn-danger btn-sm text-bold">
+                <i class="fa fa-exchange"></i>
+                MASUK/KELUAR
+            </button>
+        </form>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-6">
         <!-- Button trigger modal -->
@@ -26,6 +50,7 @@
         <button type="button" class="btn btn-warning mb-2" data-toggle="modal" data-target="#help">
           <i class="fa fa-question-circle"></i>
         </button>
+
         
         <!-- Modal -->
         <div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -185,6 +210,7 @@
                     <th>Kelas</th>
                     <th nowrap width="1%">Jam Masuk</th>
                     <th nowrap width="1%">Jam Keluar</th>
+                    <th>Ink</th>
                     <th>Ket</th>
                     <th>Aksi</th>
                   </tr>
@@ -221,6 +247,29 @@
                             @elseif($item->ket == 'A')
                             A 
                             @endif
+                        </td>
+                        <td>
+                            @php
+                                $jm = empty($pengaturan->jammasuk)?"07:30":$pengaturan->jammasuk;
+                                $kt = empty($pengaturan->keterlambatan)?"0":$pengaturan->keterlambatan;
+                                $ex = strtotime(date('H:i:s', strtotime('+'.$kt.' min', strtotime($jm))));
+                                
+                            @endphp
+                            @if ($item->ket == 'H')
+                                @if (strtotime($item->jammasuk) > $ex)
+                                    Terlambat
+                                    @else
+                                    Hadir
+                                @endif
+                            @elseif($item->ket == 'I')
+                            Izin
+                            @elseif($item->ket == 'S')
+                            Sakit
+                            @elseif($item->ket == 'A')
+                            Alfa
+                            @endif
+                            
+
                         </td>
                         <td nowrap width="1%">
                             <!-- Button trigger modal -->

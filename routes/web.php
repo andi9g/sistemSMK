@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 //scan kartu
-Route::get('/scan/{uid}', 'scanC@scan');
-Route::get('/adminScan/{uid}', 'scanC@adminscan');
+Route::get('scan', 'scanC@scan');
+Route::get('adminScan', 'scanC@adminscan');
 
 //post kartu
 Route::get('/', 'indexController@root');
@@ -29,6 +29,8 @@ Route::post('login', 'aksesC@proses')->name('login.proses');
 //API
 Route::get('api/krs_matkul/{id}','APIC@krs_matkul');
 Route::get('api/jadwal/{tahun}','APIC@APIMatkul');
+
+Route::get('token_csrf', 'aksesC@csrf');
 
 Route::middleware(['Gerbang'])->group(function () {
     //tambah admin
@@ -63,12 +65,14 @@ Route::middleware(['Gerbang'])->group(function () {
     Route::post('absen', 'absenC@keterangan')->name('tambah.keterangan');
     Route::put('absen/ubah/{idabsen}', 'absenC@ubahketerangan')->name('ubah.keterangan');
     Route::delete('absen/hapus/{idabsen}', 'absenC@hapusketerangan')->name('hapus.keterangan');
+    Route::post('ubahjam', 'absenC@ubahjam')->name('ubah.jam');
 
 
-
+    Route::get('pengaturan', 'pengaturanC@index');
+    Route::post('pengaturan', 'pengaturanC@store')->name('pengaturan.store');
     
     //dashboard
-    Route::get('/welcome', 'indexController@welcome');
+    // Route::get('/welcome', 'indexController@welcome');
     
     //ganti password
     Route::put('gantipassword', 'aksesC@ubahPassword')->name('ubah.password');
@@ -80,9 +84,10 @@ Route::middleware(['Gerbang'])->group(function () {
     
     
     
+    
     //laporan
-    Route::get('laporan', 'indexController@laporan');
-    Route::get('laporan/cetak/{idkelas_mhs}', 'cetakC@cetak')->name('cetak.laporan');
+    Route::get('laporan', 'cetakC@index');
+    Route::get('laporan/cetak', 'cetakC@cetak')->name('cetak.laporan');
     
     
     

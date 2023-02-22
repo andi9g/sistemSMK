@@ -158,14 +158,14 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
         
-          <li class="nav-item hoverku">
+          {{-- <li class="nav-item hoverku">
             <a href="{{ url('/welcome', []) }}" class="nav-link @yield('activekuHome')">
               <i class="nav-icon fa fa-dashboard"></i>
               <p>
                 DASHBOARD
               </p>
             </a>
-          </li>
+          </li> --}}
 
           <li class="nav-item hoverku">
             <a href="{{ url('/absen', []) }}" class="nav-link @yield('activekuAbsen')">
@@ -206,25 +206,8 @@
             </a>
           </li>
 
-          <li class="nav-item hoverku">
-            <hr>
-            <a href="{{ url('/penyelenggara', []) }}" class="nav-link @yield('activekuPenyelenggara')">
-              <i class="nav-icon fa fa-wrench"></i>
-              <p>
-                PENYELENGGARA
-              </p>
-            </a>
-          </li>
 
-
-          <li class="nav-item hoverku">
-            <a href="{{ url('/master', []) }}" class="nav-link @yield('activekuMaster')">
-              <i class="nav-icon fa fa-home"></i>
-              <p>
-                RUANGAN (RFID)
-              </p>
-            </a>
-          </li>
+          
               
           
 
@@ -233,6 +216,16 @@
           @if (Session::get('posisi')=='superadmin')
           <li class="nav-item hoverku">
             <hr>
+            <a href="{{ url('/alat', []) }}" class="nav-link @yield('activekuMaster')">
+              <i class="nav-icon fa fa-home"></i>
+              <p>
+                RUANGAN (RFID)
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item hoverku">
+            
             <a href="{{ url('/admin', []) }}" class="nav-link @yield('activekuAdmin')">
               <i class="nav-icon fa fa-user"></i>
               <p>
@@ -252,6 +245,15 @@
               
           @endif
 
+          <li class="nav-item hoverku">
+            <hr>
+            <a href="{{ url('/pengaturan', []) }}" class="nav-link @yield('activekuPengaturan')">
+              <i class="nav-icon fa fa-wrench"></i>
+              <p>
+                PENGATURAN
+              </p>
+            </a>
+          </li>
           
           
           

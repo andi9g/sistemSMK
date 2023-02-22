@@ -7,6 +7,8 @@ use App\Models\jurusanM;
 use App\Models\kelasM;
 use App\Models\siswaM;
 use App\Models\ketM;
+use App\Models\openM;
+use App\Models\pengaturanM;
 use Illuminate\Http\Request;
 
 class absenC extends Controller
@@ -26,8 +28,11 @@ class absenC extends Controller
         $Djurusan = jurusanM::get();
         $Dkelas = kelasM::get();
 
+        $open = openM::first();
         $ket = ketM::get();
 
+        $pengaturan = pengaturanM::first();
+        // dd($pengaturan->keterlambatan);
         $siswa = siswaM::join('jurusan', 'jurusan.idjurusan', 'siswa.idjurusan')
         ->leftJoin('absen', 'absen.nis', 'siswa.nis')
         ->where('absen.ket', null)
@@ -78,14 +83,37 @@ class absenC extends Controller
             'kelas' => $kelas,
             'siswa' => $siswa,
 
+            'open' => $open,
             'ket' => $ket,
             'jumlahSiswa' => $jumlahSiswa,
             'jumlahKehadiran' => $jumlahKehadiran,
 
+            'pengaturan' => $pengaturan,
             'Djurusan' => $Djurusan,
             'Dkelas' => $Dkelas,
         ]);
     }
+
+    public function ubahjam(Request $request)
+    {
+        $idopen = openM::first()->idopen;
+        $open = openM::first()->open;
+        $pesan = "";
+        if($open == true) {
+            openM::where('idopen', $idopen)->update([
+                'open' => false,
+            ]);
+            $pesan = "Telah dipindahkan ke <br> <h2>JAM KELUAR</h2>";
+        }else{
+            openM::where('idopen', $idopen)->update([
+                'open' => true,
+            ]);
+            $pesan = "Telah dipindahkan ke <br> <h2>JAM MASUK</h2>";
+        }
+
+        return redirect()->back()->with('success', $pesan)->withInput();
+    }
+
 
     public function keterangan(Request $request)
     {
